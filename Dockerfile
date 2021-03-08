@@ -1,5 +1,4 @@
 FROM python:3.7-alpine
-MAINTAINER swap-stack
 
 ENV PYTHONUNBUFFERED 1
 
