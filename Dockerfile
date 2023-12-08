@@ -11,12 +11,11 @@ ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
-
+# When we run the commands we dont need to specify the full path of the Django management command
 COPY ./app /app
 
-# When we run the commands we dont need to specify the full path of the Django management command
 WORKDIR /app
-EXPOSE 8000
+EXPOSE 8080
 
 ARG DEV=false
 
@@ -29,29 +28,21 @@ ARG DEV=false
 
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ $DEV = "true"]; \
+    if [ $DEV = true ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
-    rm -rf /tmp && \
+    rm -r /tmp && \
+    apk del .tmp-build-deps && \
     adduser \
         --disabled-password \
         --no-create-home \
         django-user
-
 # creates an environment variable in the linux. We do this so that every time we dont have to specify the full path to access our environment
 
 ENV PATH="/py/bin:$PATH"
-
-
-# RUN apk add --update --no-cache postgresql-client
-# RUN apk add --update --no-cache --virtual .tmp-build-deps \
-#     gcc libc-dev linux-headers postgresql-dev
-# RUN pip install -r requirements.txt
-# RUN apk del .tmp-build-deps
-# RUN mkdir /app
-# RUN adduser -D user
-
-# switch the user
 
 USER django-user
