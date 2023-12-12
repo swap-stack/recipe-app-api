@@ -1,3 +1,20 @@
 1. In the requirements file we have given the django version less than 3.3 but greater than 3.2.4 which implies that we would be okay with the patch version where only 
 bug fixes and security updates takes place and our project will not install Django 3.3 which might have possiblity of breaking our code.
 2. Linting with flake8 and testing with django test suite
+3. Wrote some github actions which runs test, lint etc
+4. tests can be written in test.py or the tests directory, but you cant have both
+5. If you write tests in directory you must have an __init__ file inside
+6. docker-compose is going to create two services, database and app
+7. We need to setup some network connectivity between these two services, which is done by docker compose
+
+database
+Using the ORM
+define models -> generate migration files -> setup database -> store database
+each model maps to a table
+models contain - name, fields, other metadeta, custom python logic
+
+create migrations
+enable app in settings.py
+use django cli and makemigrations
+apply migrate
+
